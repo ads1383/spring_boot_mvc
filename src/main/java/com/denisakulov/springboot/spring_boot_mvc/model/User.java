@@ -4,8 +4,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -21,10 +24,10 @@ public class User implements UserDetails {
     @Column(name = "surname")
     private String lastName;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "age")
+    private int age;
 
-    @Column(name = "username")
+    @Column(name = "email")
     private String username; // уникальное значение
 
     @Column(name = "password")
@@ -51,11 +54,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email,
+    public User(String firstName, String lastName, int age,
                 String username, String password, Set<Role> roles, Boolean enabled) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.age = age;
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -86,12 +89,12 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public int getAge() {
+        return age;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getUsername() {
@@ -152,6 +155,14 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<String> listRoleNamesByUser() {
+        List<String> roleNamesByUser = roles.stream()
+                .map(p -> p.getRole().trim()).collect(Collectors.toList());
+
+        return roleNamesByUser.stream().map(p -> p.startsWith("ROLE") ? p.substring(5) : p)
+                                .collect(Collectors.toList());
     }
 
 }
