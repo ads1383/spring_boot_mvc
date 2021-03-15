@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<macro xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-       xmlns:sec="http://www.w3.org/1999/xhtml">
+<macro xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
 <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -31,12 +30,20 @@
     </nav>
     <div class="row">
         <div class="col-2 mt-3 p-0">
-            <div class="nav flex-column nav-pills" th:block
-                 th:each="role : ${principalUser.listRoleNamesByUser()}">
-                <a th:class= "${role} == 'USER' ? 'nav-link active' : 'nav-link'"
-                   th:href="@{/{page}(page = ${role.toLowerCase()})}" th:value="${role}"
-                   th:text="${role.substring(0, 1) + role.toLowerCase().substring(1)}">User</a>
-            </div>
+<!--            <div class="nav flex-column nav-pills" th:block-->
+<!--                 th:each="role : ${principalUser.listRoleNamesByUser()}">-->
+<!--&lt;!&ndash;                <a th:class= "${role} == 'USER' ? 'nav-link active' : 'nav-link'"&ndash;&gt;-->
+<!--                   th:href="@{/{page}(page = ${role.toLowerCase()})}" th:value="${role}"-->
+<!--                   th:text="${role.substring(0, 1) + role.toLowerCase().substring(1)}">User</a>-->
+<!--            </div>-->
+            <ul class="nav flex-column nav-pills">
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_USER')">
+                    <a class="nav-link active" href="/user">User</a>
+                </li>
+            </ul>
         </div>
         <div class="col-10">
             <div class="bg-light p-2">
